@@ -1,0 +1,7 @@
+Chess pieces: Cburnett (Colin M. L. Burnett), via lichess-org/lila, public/piece/cburnett.
+Source: https://github.com/lichess-org/lila/tree/master/public/piece/cburnett
+License: GNU General Public License v2 or later (GPL-2.0-or-later).
+License copy: GPL-2.0.txt in this directory. SVG files retain author/license comments where supplied.
+The piece SVG source is provided under /pieces/ without modification.
+
+Interface icons: Lucide, ISC license. https://lucide.dev/license
