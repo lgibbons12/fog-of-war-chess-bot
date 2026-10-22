@@ -24,18 +24,24 @@ class GameSummary:
 
 
 def pair_seeds(base_seed: int, pair: int) -> tuple[int, int]:
-    """Seeds (for A, for B) of pair ``pair``; both games of a pair reuse them."""
-    rng = random.Random(base_seed + pair)
+    """Seeds (for A, for B) of pair ``pair``; both games of a pair reuse them.
+
+    Seeded from the pair (base_seed, pair) jointly, not ``base_seed + pair``:
+    the sum would make runs with base seeds s and s+1 share all but one pair.
+    String seeds are deterministic across processes (no hash randomization).
+    """
+    rng = random.Random(f"{base_seed}:{pair}")
     return rng.getrandbits(32), rng.getrandbits(32)
 
 
 def _play_task(task: tuple) -> GameSummary:
     """Pool worker: play one game named by strings, optionally save its replay."""
-    agent_a, agent_b, pair, a_color, seed_a, seed_b, max_plies, replay_dir = task
+    agent_a, agent_b, pair, a_color, seed_a, seed_b, max_plies, replay_dir, strict = task
+    record = replay_dir is not None
     if a_color == "white":
-        replay = play_game(agent_a, agent_b, seed_a, seed_b, max_plies, replay_dir is not None)
+        replay = play_game(agent_a, agent_b, seed_a, seed_b, max_plies, record, strict)
     else:
-        replay = play_game(agent_b, agent_a, seed_b, seed_a, max_plies, replay_dir is not None)
+        replay = play_game(agent_b, agent_a, seed_b, seed_a, max_plies, record, strict)
     if replay_dir is not None:
         path = Path(replay_dir) / f"pair{pair:05d}_a{a_color}.json"
         path.write_text(json.dumps(replay) + "\n")
@@ -46,11 +52,12 @@ def _play_task(task: tuple) -> GameSummary:
 
 def run_match_pairs(agent_a: str, agent_b: str, n_pairs: int, base_seed: int,
                     workers: int = os.cpu_count(), max_plies: int = 1000,
-                    replay_dir: str | None = None) -> list[GameSummary]:
+                    replay_dir: str | None = None, strict: bool = True) -> list[GameSummary]:
     """Play ``n_pairs`` pairs (A-White then B-White) and return summaries in task order.
 
     Results do not depend on ``workers``: seeds come only from
-    ``base_seed + pair``, and ``imap`` preserves task order.
+    ``base_seed + pair``, and ``imap`` preserves task order. With ``strict``
+    an agent exception aborts the batch instead of scoring a loss.
     """
     if replay_dir is not None:
         Path(replay_dir).mkdir(parents=True, exist_ok=True)
@@ -58,7 +65,7 @@ def run_match_pairs(agent_a: str, agent_b: str, n_pairs: int, base_seed: int,
     for pair in range(n_pairs):
         seed_a, seed_b = pair_seeds(base_seed, pair)
         for a_color in ("white", "black"):
-            tasks.append((agent_a, agent_b, pair, a_color, seed_a, seed_b, max_plies, replay_dir))
+            tasks.append((agent_a, agent_b, pair, a_color, seed_a, seed_b, max_plies, replay_dir, strict))
     if workers <= 1:
         return [_play_task(task) for task in tasks]
     with multiprocessing.Pool(workers) as pool:

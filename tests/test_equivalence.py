@@ -29,7 +29,8 @@ class EquivalenceTests(unittest.TestCase):
                 with self.subTest(white=white, black=black, seed=seed):
                     expected = run_match(starter_argv(white, seed_white),
                                          starter_argv(black, seed_black), max_plies=MAX_PLIES)
-                    actual = play_game(white, black, seed_white, seed_black, MAX_PLIES)
+                    # strict=False: like the referee, a crashing bot loses instead of raising.
+                    actual = play_game(white, black, seed_white, seed_black, MAX_PLIES, strict=False)
                     self.assertNotIn("failedSide", expected)
                     self.assertEqual(actual["result"], expected["result"])
                     self.assertEqual(actual["reason"], expected["reason"])

@@ -44,6 +44,7 @@ def main(argv: list[str] | None = None) -> None:
     moves = sum(a_moves(s) for s in summaries)
     total = sum(s.a_think_total for s in summaries)
     peak = max((s.a_think_max for s in summaries), default=0.0)
+    print(f"Mean plies: {sum(s.plies for s in summaries) / max(len(summaries), 1):.1f}")
     print(f"Think (A): mean {1000 * total / max(moves, 1):.3f} ms/move, max {1000 * peak:.3f} ms")
     print(f"Throughput: {len(summaries) / wall:.2f} games/s ({wall:.1f} s, {args.workers} workers)")
     print(f"Summaries: {summary_path}")
