@@ -74,9 +74,23 @@ def names(squares) -> set[str]:
     return {chess.square_name(square) for square in squares}
 
 
+class FakeTracker:
+    """Minimal stand-in for PossibilityTracker's two safety queries."""
+
+    def __init__(self, types: dict[str, str], occupied: tuple[str, ...] = ()):
+        self.types = {chess.parse_square(name): frozenset(kinds) for name, kinds in types.items()}
+        self.occupied = sum(chess.BB_SQUARES[chess.parse_square(name)] for name in occupied)
+
+    def possible_types_at(self, square: int) -> frozenset[str]:
+        return self.types.get(square, frozenset())
+
+    def certainly_occupied(self) -> int:
+        return self.occupied
+
+
 class AttackersOfTests(unittest.TestCase):
-    def attackers(self, pieces, unknown=(), target="d4", side=chess.WHITE):
-        known, possible = attackers_of(cells_with(pieces, unknown), chess.parse_square(target), side)
+    def attackers(self, pieces, unknown=(), target="d4", side=chess.WHITE, tracker=None):
+        known, possible = attackers_of(cells_with(pieces, unknown), chess.parse_square(target), side, tracker)
         self.assertEqual(len(possible), len(set(possible)))
         return names(known), names(possible)
 
@@ -121,6 +135,21 @@ class AttackersOfTests(unittest.TestCase):
 
     def test_unknown_on_knight_square_is_possible(self):
         self.assertEqual(self.attackers({}, unknown=("e6", "b3")), (set(), {"e6", "b3"}))
+
+    def test_tracker_mode_filters_types_and_sees_past_harmless_unknowns(self):
+        # d5: only a knight possible (harmless on a file); d7: rook possible.
+        tracker = FakeTracker({"d5": "N", "d7": "R", "e6": "P"})
+        self.assertEqual(self.attackers({}, unknown=("d5", "d7", "e6"), tracker=tracker), (set(), {"d7"}))
+        # A certainly occupied harmless '?' blocks the ray.
+        tracker = FakeTracker({"d5": "N", "d7": "R"}, occupied=("d5",))
+        self.assertEqual(self.attackers({}, unknown=("d5", "d7"), tracker=tracker), (set(), set()))
+        # Knight squares only count where a knight is possible.
+        tracker = FakeTracker({"e6": "N", "b3": "BQ"})
+        self.assertEqual(self.attackers({}, unknown=("e6", "b3"), tracker=tracker), (set(), {"e6"}))
+
+    def test_tracker_mode_visible_attacker_behind_unknown_is_only_possible(self):
+        tracker = FakeTracker({"d5": "P"})
+        self.assertEqual(self.attackers({"d8": "r"}, unknown=("d5",), tracker=tracker), (set(), {"d8"}))
 
     def test_king_safety_wraps_attackers_of_our_king(self):
         report = king_safety(cells_with({"d4": "K", "d8": "r"}, unknown=("a1",)), chess.WHITE)

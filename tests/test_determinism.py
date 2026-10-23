@@ -19,7 +19,8 @@ def without_timing(summaries):
 
 class DeterminismTests(unittest.TestCase):
     def test_same_args_same_summaries_across_worker_counts(self):
-        for agent_a, agent_b in [("random", "baseline"), ("random", "random"), ("safety", "baseline")]:
+        for agent_a, agent_b in [("random", "baseline"), ("random", "random"), ("safety", "baseline"),
+                                 ("tracked_v2", "safe_material")]:
             with self.subTest(a=agent_a, b=agent_b):
                 serial = run_match_pairs(agent_a, agent_b, 4, 11, workers=1)
                 parallel = run_match_pairs(agent_a, agent_b, 4, 11, workers=4)

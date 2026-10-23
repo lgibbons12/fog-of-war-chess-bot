@@ -153,6 +153,89 @@ class ScriptedTrackerTests(unittest.TestCase):
 PROMOTION = frozenset("NBRQ")
 
 
+class TrackerSoundnessTests(unittest.TestCase):
+    """Key test: our tracker never excludes the truth over 200+ harness games."""
+
+    def check_game(self, replay: dict, side: chess.Color) -> tuple[int, int]:
+        """Return (observations checked, (decision, move) safety pairs checked)."""
+        board = FowBoard()
+        tracker = PossibilityTracker(side, strict=True)
+        legal = ObservationTracker(side)
+        prev = last = None
+        observations = moves_checked = 0
+        for ply in range(replay["plies"]):
+            obs = observation(board, side)
+            tracker.on_observation(obs, ply, last, prev)
+            legal.observe(obs)
+            self.assertTrue(has_matching(board, side, tracker.hyps), f"ply {ply}: {board.fen()}")
+            self.assertFalse(tracker.certainly_occupied() & ~board.occupied_co[not side], board.fen())
+            observations += 1
+            frame = replay["frames"][ply + 1]
+            if board.turn == side:
+                self.assertEqual(frame["decision"]["tracker"]["resets"], 0)
+                for move in legal.legal_moves():
+                    report = king_safety(apply_move(obs, move, side), side, tracker)
+                    board.push(move)
+                    attacked = board.is_attacked_by(not side, board.king(side))
+                    board.pop()
+                    if report.known_loss:
+                        self.assertTrue(attacked, f"{board.fen()} {move}: known loss but safe")
+                    elif not report.exposed:
+                        self.assertFalse(attacked, f"{board.fen()} {move}: reported safe but attacked")
+                    moves_checked += 1
+                last = chess.Move.from_uci(frame["move"])
+                legal.record_move(last)
+            board.push_uci(frame["move"])
+            prev = obs
+        return observations, moves_checked
+
+    def test_tracker_and_tracked_safety_are_sound(self):
+        observations = moves_checked = games = 0
+        for opponent in ("random", "baseline", "safety_v2"):
+            for seed in range(34):  # 34 x 3 opponents x 2 colors = 204 games
+                for side in (chess.WHITE, chess.BLACK):
+                    white, black = ("tracked_v2", opponent) if side else (opponent, "tracked_v2")
+                    with self.subTest(white=white, black=black, seed=seed):
+                        o, m = self.check_game(play_game(white, black, seed, seed + 700), side)
+                        observations, moves_checked, games = observations + o, moves_checked + m, games + 1
+        self.assertEqual(games, 204)
+        self.assertGreater(observations, 8000)
+        self.assertGreater(moves_checked, 50000)
+
+
+def coarse_tracker(side: chess.Color, obs: str, count: int) -> PossibilityTracker:
+    """Every enemy piece may be any type on any '?' or visible enemy square."""
+    support = sum(chess.BB_SQUARES[sq] for sq, char in enumerate(obs)
+                  if char == "?" or (char not in "-?" and char.isupper() != side))
+    tracker = PossibilityTracker(side, pieces=[EnemyPiece(ALL_TYPES, support) for _ in range(count)])
+    tracker.on_observation(obs, 0, None, None)
+    return tracker
+
+
+class ReductionTests(unittest.TestCase):
+    def test_coarse_tracker_reproduces_step1_reports(self):
+        compared = 0
+        for seed in range(10):
+            for white, black in (("safety_v2", "baseline"), ("baseline", "safety_v2")):
+                replay = play_game(white, black, seed, seed + 900)
+                side = chess.WHITE if white == "safety_v2" else chess.BLACK
+                board, legal = FowBoard(), ObservationTracker(side)
+                for ply in range(replay["plies"]):
+                    obs = observation(board, side)
+                    legal.observe(obs)
+                    move_uci = replay["frames"][ply + 1]["move"]
+                    if board.turn == side:
+                        count = chess.popcount(board.occupied_co[not side])
+                        tracker = coarse_tracker(side, obs, count)
+                        for move in legal.legal_moves():
+                            cells = apply_move(obs, move, side)
+                            self.assertEqual(king_safety(cells, side, tracker), king_safety(cells, side),
+                                             f"{board.fen()} {move}")
+                            compared += 1
+                        legal.record_move(chess.Move.from_uci(move_uci))
+                    board.push_uci(move_uci)
+        self.assertGreater(compared, 5000)
+
 
 if __name__ == "__main__":
     unittest.main()

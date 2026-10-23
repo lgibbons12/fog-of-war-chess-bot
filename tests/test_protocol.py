@@ -29,7 +29,7 @@ class ProtocolTranscriptTests(unittest.TestCase):
         board = FowBoard()
         # White receives exactly one observation before its first move.
         transcript = "fow\nw 180 2\n" + observation(board, chess.WHITE) + "\n180\n"
-        for agent in ("random", "baseline", "safety"):
+        for agent in ("random", "baseline", "safety", "tracked_v2"):
             with self.subTest(agent=agent):
                 out = subprocess.run(protocol_argv(agent, 7), input=transcript, text=True,
                                      capture_output=True, check=True, timeout=30).stdout
