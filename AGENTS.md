@@ -5,15 +5,15 @@ Context for coding agents working in this repo. Read this file in full before ch
 ## What this project is
 
 - We are building a bot for the MIT 6.7980 Fog of War Chess Challenge, a course project. Our team is AJ Sachwitz, Liam Gibbons, and JJ Detweiler.
-- Work proceeds in **numbered steps**. Each step has a spec in `docs/specs/`.
+- Work proceeds in **numbered steps**. Each step has a spec in `docs/` (`docs/step-<n>-*.md`). Results and issues go in `docs/log.md`.
 - **Implement only the current step's spec.** Don't add strategy, optimizations, or features from later steps.
 - A human reviews every step before the next one starts.
 
 ## Planned architecture (for orientation only; do not build ahead)
 
-0. Agent interface and in-process harness. **Current step:** `docs/specs/step0-harness.md`.
-1. Safety agent: greedy captures plus possibility-based king safety.
-2. Possibility tracker: per-enemy-piece, history-consistent reachable squares.
+0. Agent interface and in-process harness (`docs/step-0-spec.md`, done).
+1. Safety agent: greedy captures plus possibility-based king safety (`docs/step-1-safety.md`, done).
+2. Possibility tracker: per-enemy-piece, history-consistent reachable squares. **Current step:** `docs/step-2-possibility.md`.
 3. Particle tracker: weighted full boards, filtered with the referee's `observation()`.
 4. Stockfish integration and throughput benchmarks.
 5. Decision experiments.
@@ -79,6 +79,8 @@ run.sh        # top-level entry: cd "$(dirname "$0")" && exec python3 -u -m bot.
 referee.py    # copied from the repo root
 bot/          # the bot/ package as-is (bot/run.sh is for running from inside the repo)
 ```
+
+**Arena agent: `safety_v2`** (registry name). Build the zip with `scripts/package.sh [agent]` (default `safety_v2`). Before uploading, run `scripts/check_package.sh`, which needs Linux/macOS or WSL. It unzips the build and plays one referee game in each color against `baseline.py`.
 
 ## Commands
 
