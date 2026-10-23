@@ -51,6 +51,11 @@ class LeakageTests(unittest.TestCase):
                 self.assertNotEqual(top, "harness", f"{path} imports {name}")
                 self.assertIn(top, ALLOWED_TOP_LEVEL, f"{path} imports {name}")
 
+    def test_possibility_tracker_imports_only_stdlib_chess_and_referee(self):
+        for name in imported_modules(BOT_DIR / "possibility.py"):
+            top = name.split(".")[0]
+            self.assertIn(top, set(sys.stdlib_module_names) | {"chess", "referee"}, name)
+
     def test_agents_receive_only_observation_strings_and_float_clocks(self):
         SpyAgent.observed, SpyAgent.clocks = [], []
         with mock.patch.dict(bot.agents.REGISTRY, {"spy": SpyAgent}):
