@@ -35,7 +35,7 @@ def fallback_move(agent: Agent) -> chess.Move | None:
     if not moves:
         return None
     move = agent.rng.choice(moves)
-    agent.tracker.record_move(move)
+    agent.record(move)
     return move
 
 

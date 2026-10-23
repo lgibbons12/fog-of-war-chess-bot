@@ -44,8 +44,9 @@ class SafetyAgent(Agent):
 
     exposure_mode = "count"
 
-    def __init__(self, side: chess.Color, base: float, increment: float, seed: int | None):
-        super().__init__(side, base, increment, seed)
+    def __init__(self, side: chess.Color, base: float, increment: float, seed: int | None,
+                 strict: bool = False):
+        super().__init__(side, base, increment, seed, strict)
         self.last_decision: dict | None = None
 
     def exposure_term(self, report: SafetyReport) -> int:

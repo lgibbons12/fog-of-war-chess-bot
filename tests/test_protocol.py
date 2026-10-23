@@ -27,8 +27,8 @@ def protocol_argv(agent: str, seed: int) -> list[str]:
 class ProtocolTranscriptTests(unittest.TestCase):
     def test_ready_then_one_move_per_clock_line(self):
         board = FowBoard()
-        transcript = ("fow\nw 180 2\n" + observation(board, chess.WHITE) + "\n"
-                      + observation(board, chess.WHITE) + "\n180\n")
+        # White receives exactly one observation before its first move.
+        transcript = "fow\nw 180 2\n" + observation(board, chess.WHITE) + "\n180\n"
         for agent in ("random", "baseline", "safety"):
             with self.subTest(agent=agent):
                 out = subprocess.run(protocol_argv(agent, 7), input=transcript, text=True,

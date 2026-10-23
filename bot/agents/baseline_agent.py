@@ -43,8 +43,9 @@ class BaselineAgent(Agent):
     in list order, giving the same RNG call sequence as the starter.
     """
 
-    def __init__(self, side: chess.Color, base: float, increment: float, seed: int | None):
-        super().__init__(side, base, increment, 1 if seed is None else seed)
+    def __init__(self, side: chess.Color, base: float, increment: float, seed: int | None,
+                 strict: bool = False):
+        super().__init__(side, base, increment, 1 if seed is None else seed, strict)
 
     def _select(self, remaining: float) -> chess.Move:
         board, moves = candidates(self.tracker.current, self.side, self.tracker.rights)

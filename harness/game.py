@@ -49,7 +49,8 @@ def play_game(white: str, black: str, seed_white: int, seed_black: int,
     ``NoLegalMoves`` and illegal or malformed moves always become losses with
     the referee's reason text. Other agent exceptions propagate when
     ``strict`` (so bugs fail loudly); otherwise they become "Bot exited"
-    losses, which is what the subprocess referee would record.
+    losses, which is what the subprocess referee would record. ``strict`` is
+    also passed to the agents, so their internal consistency checks raise.
 
     Returns ``white``/``black`` agent names, ``result``, ``reason``, ``frames``
     (referee schema with ``clocks`` replaced by ``thinkSeconds`` plus the
@@ -86,7 +87,8 @@ def play_game(white: str, black: str, seed_white: int, seed_black: int,
     agents = []
     for index, (name, seed) in enumerate([(white, seed_white), (black, seed_black)]):
         try:
-            agents.append(REGISTRY[name](index == 0, BASE_SECONDS, INCREMENT_SECONDS, seed))
+            agents.append(REGISTRY[name](index == 0, BASE_SECONDS, INCREMENT_SECONDS, seed,
+                                         strict=strict))
         except Exception:
             if strict:
                 raise
