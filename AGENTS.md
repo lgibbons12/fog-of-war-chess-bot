@@ -5,7 +5,7 @@ Context for coding agents working in this repo. Read this file in full before ch
 ## What this project is
 
 - We are building a bot for the MIT 6.7980 Fog of War Chess Challenge, a course project. Our team is AJ Sachwitz, Liam Gibbons, and JJ Detweiler.
-- Work proceeds in **numbered steps**. Each step has a spec in `docs/` (`docs/step-<n>-*.md`). Results and issues go in `docs/log.md`.
+- Work proceeds in **numbered steps**. Each step has a spec in `docs/` (`docs/step-<n>-*.md`). Results and issues go in `docs/log.md`. Decisions go in `docs/adr/` as Architecture Decision Records (see below).
 - **Implement only the current step's spec.** Don't add strategy, optimizations, or features from later steps.
 - A human reviews every step before the next one starts.
 
@@ -153,3 +153,14 @@ wsl.exe -d Ubuntu -- bash -lc 'cd "<repo path under /mnt/c>" && ~/.venvs/fow/bin
   4. Any deviations from the spec, and why.
   5. Open questions.
 - Ask before any destructive change: deleting files, rewriting history, or editing starter files.
+
+## Decision records (ADRs)
+
+We will write a paper from this project, so every significant decision is recorded in `docs/adr/`. `docs/adr/README.md` defines when to write one; use `docs/adr/template.md`.
+
+- **When you make or propose a decision, write the ADR in the same change.** That includes resolving a spec ambiguity or conflict, deviating from a spec, choosing between agent variants, changing measurement or seeding, or adopting or rejecting an approach based on experiments.
+- **Record negative results** (gates that fail, rejected variants) with status `Rejected` or `Accepted` as appropriate. They belong in the paper.
+- **Be honest about who decided.** Use `Decided by: Claude Code` and `Status: Proposed` for calls you made yourself; a human moves it to `Accepted` after review.
+- **Cite evidence** with the verified/assumed/unverified labels, seeds, pair counts, and CIs, and link the `docs/log.md` section.
+- **Never rewrite an accepted ADR's decision.** Write a new ADR that supersedes it.
+- Add each new ADR to the index in `docs/adr/README.md`, and list new ADRs in the end-of-step report.
