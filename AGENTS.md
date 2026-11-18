@@ -128,6 +128,12 @@ From a Windows shell, the same suite runs as a one-liner:
 wsl.exe -d Ubuntu -- bash -lc 'cd "<repo path under /mnt/c>" && ~/.venvs/fow/bin/python -m pytest tests test_uniform_random.py -p no:cacheprovider'
 ```
 
+Packaging from Windows: `bash ./scripts/package.sh` works from `cmd` or PowerShell, where `bash` is WSL's bash calling the Windows `.venv`. The package check must run inside WSL, with the Linux venv passed explicitly:
+
+```sh
+wsl.exe -d Ubuntu -- bash -lc 'cd "<repo path under /mnt/c>" && PYTHON=~/.venvs/fow/bin/python bash scripts/check_package.sh'
+```
+
 `bot/run.sh` and the zip's `run.sh` call `python3` from `PATH`, which has no `chess` unless a venv is active. Tests therefore launch the bot with `sys.executable` (see `tests/test_protocol.py`) rather than via `run.sh`.
 
 ## Conventions

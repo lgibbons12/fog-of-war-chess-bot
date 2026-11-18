@@ -15,14 +15,14 @@ fi
 AGENT="${1:-safety_v2}"
 mkdir -p dist
 rm -f dist/bot.zip
-AGENT="$AGENT" "$PYTHON" - <<'EOF'
-import os
+"$PYTHON" - "$AGENT" <<'EOF'
+import sys
 from pathlib import Path
 import zipfile
 
 from bot.agents import REGISTRY
 
-agent = os.environ["AGENT"]
+agent = sys.argv[1]
 if agent not in REGISTRY:
     raise SystemExit(f"unknown agent {agent!r}; choose from {sorted(REGISTRY)}")
 
