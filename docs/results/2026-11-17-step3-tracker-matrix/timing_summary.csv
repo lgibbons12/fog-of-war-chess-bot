@@ -1,0 +1,11 @@
+config,n,model,trigger,recovery,diversity,games,observations,truth_coverage,truth_weight,mean_distinct,unavailable_frac,depletions_per_game,regeneration_failures,reexpansions,reexpansion_failures,moves,moves_unscored,brier,logloss,losing_moves,missed_loss_frac,false_certain,min_risk_pick_loses,median_move_s,p95_move_s,max_move_s
+n32-uniform-above_n-supports-sys,32,uniform,above_n,supports,False,12,513,0.34308,0.165169,16.4269,0,2.83333,0,0,0,5235,0,0.00544048,0.0264938,190,0.0315789,0,0.00784314,0.0210896,0.108215,0.143783
+n32-uniform-above_n-reexpand-sys,32,uniform,above_n,reexpand,False,12,513,0.405458,0.193569,15.0058,0,1.83333,0,8,14,5235,0,0.00427962,0.02214,190,0.0315789,0,0.00784314,0.0181906,0.105666,0.282583
+n64-uniform-above_n-supports-sys,64,uniform,above_n,supports,False,12,513,0.436647,0.139775,31.5517,0,2.91667,0,0,0,5235,0,0.0056647,0.0243996,190,0,1,0.00392157,0.0287066,0.20009,0.246542
+n64-uniform-above_n-reexpand-sys,64,uniform,above_n,reexpand,False,12,513,0.461988,0.14578,26.8752,0,2.25,0,12,15,5235,0,0.00463723,0.0198569,190,0,1,0,0.026198,0.211907,0.314942
+n128-uniform-above_n-supports-sys,128,uniform,above_n,supports,False,12,513,0.423002,0.129376,48.386,0,2,0,0,0,5235,0,0.0055777,0.0238459,190,0,0,0.00392157,0.0292151,0.371042,0.486263
+n128-uniform-above_n-reexpand-sys,128,uniform,above_n,reexpand,False,12,513,0.504873,0.190467,41.1618,0,1.66667,0,8,12,5235,0,0.00606344,0.0278818,190,0.0105263,2,0.00784314,0.0254637,0.41408,1.04692
+n256-uniform-above_n-supports-sys,256,uniform,above_n,supports,False,12,513,0.547758,0.144168,67.2943,0,0.916667,0,0,0,5235,0,0.004265,0.0160183,190,0,0,0.00784314,0.025757,0.700723,0.970572
+n256-uniform-above_n-reexpand-sys,256,uniform,above_n,reexpand,False,12,513,0.602339,0.212827,60.0117,0,0.666667,0,4,4,5235,0,0.00418439,0.0150594,190,0,0,0.00784314,0.0224912,0.683991,1.30363
+n512-uniform-above_n-supports-sys,512,uniform,above_n,supports,False,12,513,0.606238,0.160527,118.554,0,0.75,0,0,0,5235,0,0.00490243,0.0189749,190,0,0,0.00784314,0.0391788,1.25668,2.31235
+n512-uniform-above_n-reexpand-sys,512,uniform,above_n,reexpand,False,12,513,0.662768,0.216449,94.3645,0,0.5,0,4,2,5235,0,0.00453132,0.0175169,190,0.00526316,0,0.00784314,0.0249668,1.20643,1.88512

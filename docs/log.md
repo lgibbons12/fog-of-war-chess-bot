@@ -291,3 +291,98 @@ Hypothesis supports also grow steadily with the ply count (8.9 → 41 squares), 
 8. **Test threshold.** The soundness test's minimum-coverage guess (10,000 observations) was too high, since 204 games produce about 9,200. Lowered to 8,000. Every soundness check itself passed.
 9. **Gate failure (open).** `tracked_v2` does not beat `safety_v2`, so the arena agent stays `safety_v2`. See "Why the tracker didn't pass the gate".
    - *Next-step candidates:* use exposure as a hard filter rather than a tie-break (for example, prefer unexposed moves unless the material gain is large), or move on to Step 3 particles to rank the remaining risk by probability.
+
+## Step 3: Particle tracker, Part A (2026-11-17)
+
+Spec: `docs/step-3-particles.md` (still a **draft**; Part A was started at Liam's request before the remaining open questions were settled). Status: Part A implemented, and all tests pass. Parts B and C are not started. Not yet committed.
+
+### What we did
+
+**Bot**
+- `bot/particles.py`: `Particle`, `OpponentModel` with `UniformModel` and `CaptureModel`, `ParticleTracker`, and `particle_key`.
+  - **Consistency is decided only by the referee.** A board survives iff `observation(board, side) == obs` and `outcome(board, Counter()) is None`.
+  - **Opponent plies enumerate every child.** Cheap necessary checks run first (capture on the lost square or no capture at all; the destination shows `?` or the moved piece), then the referee's `observation()` decides.
+  - **Duplicates are merged** by `(board_fen, turn, castling rights, ep square, halfmove clock)`, after both our plies and theirs.
+  - **Resampling is systematic,** and only happens when there are more than `n` distinct boards (ADR 0015).
+  - **Depletion recovery:** rejection-sample boards from the possibility tracker's supports, with at most `20·n` attempts. If that fails, `available = False`.
+  - `loss_probability(move)` is the weighted fraction of particles where `outcome()` reports "King capturable" after our move.
+- `AGENTS.md`: the current step is now Step 3.
+
+**Tests:** `tests/test_particles.py`.
+- **Scripted units:**
+  - the start position is exact for both sides;
+  - Black's view after each of White's 20 first moves, under both models;
+  - our capture;
+  - an enemy capture on a known square;
+  - enemy en passant;
+  - a particle where our king becomes capturable is dropped;
+  - depletion regenerates from the possibility tracker, including the truth;
+  - depletion without a possibility tracker leaves particles unavailable;
+  - resampling is deterministic, uses one RNG call, and keeps any board weighing at least 1/n.
+- **Consistency over replayed harness games** (spec tests 1–4): 24 `tracked_v2` games against random, baseline and `safety_v2`, in both colors, at `n = 32`. Checks:
+  - every particle matches the observation and passes `outcome()`;
+  - particle keys are distinct, and weights sum to 1;
+  - every particle's move set equals `ObservationTracker.legal_moves()`;
+  - every particle fits within the possibility tracker's supports (bipartite matching), except at a regeneration observation;
+  - known loss ⇒ `p_loss = 1`, and no known loss with nothing exposed ⇒ `p_loss = 0`.
+- **Exactness (not in the spec):** with resampling disabled, the true board is among the particles at every observation, over 8 games and their first 16 plies.
+
+### Results (verified)
+
+- **Tests:**
+  - **Linux (WSL Ubuntu):** 58 passed, 537 subtests.
+  - **Windows:** 43 passed, 2 skipped (the referee tests).
+  - **Consistency test:** 891 observations, 16,559 particle-observations and 9,805 `p_loss` checks against the possibility layer, with zero violations. There were 79 depletions, 79 regenerations and 0 regeneration failures.
+  - **Exactness test:** 95 truth checks.
+- **`n = 128` smoke run** (7 replayed games, Windows dev machine, Python 3.11; per observation, including `p_loss` for every legal move on our decisions):
+
+  | Game (ours in bold) | Plies | Truth among particles | Depletions | Median / max time |
+  |---|---|---|---|---|
+  | **tracked_v2** vs baseline, seed 0 | 36 | 30/36 | 0 | 16 / 786 ms |
+  | baseline vs **tracked_v2**, seed 0 | 72 | 3/72 | 5 | 27 / 875 ms |
+  | **tracked_v2** vs baseline, seed 1 | 44 | 44/44 | 0 | 11 / 600 ms |
+  | baseline vs **tracked_v2**, seed 1 | 23 | 5/23 | 2 | 18 / 583 ms |
+  | **tracked_v2** vs baseline, seed 2 | 24 | 4/24 | 3 | 46 / 853 ms |
+  | baseline vs **tracked_v2**, seed 2 | 55 | 37/55 | 1 | 7 / 383 ms |
+  | **tracked_v2** vs random, seed 0 | 30 | 12/30 | 2 | 48 / 883 ms |
+
+  Overall, the truth was among the particles at 135/284 observations (48%), with 13 depletions in 7 games. Timing fits the budget (0.4 s median, 1.5 s max per move), but this is not the formal timing run.
+
+### Issues found and resolutions
+
+1. **Duplicate particles after our move (fixed).** Boards that differ only in their halfmove clock become identical when our pawn move or capture resets it. The consistency test caught this. *Resolution:* the filter merges duplicates.
+2. **Resampling trigger (deviation, ADR 0015).** The spec's ESS < n/2 trigger fires on almost every small merged set and only throws away boards. Resampling now happens only when there are more than `n` distinct boards.
+3. **Interface changes from the spec.**
+   - `on_observation` takes `our_rights` (our castling rights from `ObservationTracker`), which regeneration needs to build boards whose observation matches.
+   - It doesn't take `prev_obs`; the tracker keeps its own.
+   - The constructor takes an optional `start` board, so tests can start from a FEN.
+4. **Test scope (temporary).** Spec tests 1–4 call for 200 games of `particle_ev300`. That agent is Part B, so for now the test replays 24 `tracked_v2` games at `n = 32`, to keep the suite at about 2 minutes. It switches to particle-agent games in Part B.
+5. **The tracker often loses the true board (open, needs a team decision).**
+   - The exact set of consistent boards swings widely: from 1 board to 138,200 and back to 272 within a few plies (baseline vs `tracked_v2`, seed 0).
+   - When it exceeds `n`, resampling usually drops the truth. A later observation then rules out everything we kept, and the tracker regenerates from possibility supports, which carry no history.
+   - Hence 48% truth coverage at `n = 128`, and the worst game (3/72) had the bot playing Black against baseline's greedy captures.
+   - *Options:*
+     - (a) Accept it, and let the calibration metric in Part C show whether `p_loss` is still useful.
+     - (b) Raise `n` as far as the timing run allows.
+     - (c) Better recovery: on depletion, re-expand from the last non-empty set and keep more children, instead of regenerating from supports.
+     - (d) Weight the resampling toward diversity, e.g. keep boards that differ on squares near our king.
+   - Each option except (a) is a spec change, so this waits for review.
+
+### Decision matrix (2026-11-17 to 18)
+
+At Liam's request, every open Part A choice was run as a full matrix. Results, commands and raw data are in `docs/results/2026-11-17-step3-tracker-matrix/`; the recommendation is ADR 0016 (Proposed).
+
+- **New tracker options** (experiment knobs; the defaults are unchanged):
+  - `trigger` = `above_n` | `ess`;
+  - `recovery` = `supports` | `reexpand` (option c above);
+  - `diversity` (option d above).
+
+  `tests/test_particles.py` checks invariants for each option.
+- **New harness tools:** `harness/particle_matrix.py` runs the matrix and the timing run, and `harness/matrix_report.py` and `harness/matrix_compare.py` produce the tables and paired bootstrap intervals.
+- **Headline results** (verified; 60 replayed games, 27,509 scored moves):
+  - **Particles beat the possibility tracker as a risk predictor:** Brier ×100 0.60–0.72 vs 1.84.
+  - **More particles keep the truth more often:** n = 256 vs 128 adds +0.108 truth coverage [+0.051, +0.168].
+  - **The timing run picks n = 256.** Its single-worker max is 0.97–1.30 s per move; n = 512 breaks the 1.5 s max.
+  - **Re-expansion helps truth coverage:** +0.043 [+0.014, +0.082].
+  - **No significant effect:** the `capture` model, the `ess` trigger and diversity resampling.
+- **Tests:** Linux 59 passed, 557 subtests.

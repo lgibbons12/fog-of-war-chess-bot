@@ -13,8 +13,8 @@ Context for coding agents working in this repo. Read this file in full before ch
 
 0. Agent interface and in-process harness (`docs/step-0-spec.md`, done).
 1. Safety agent: greedy captures plus possibility-based king safety (`docs/step-1-safety.md`, done).
-2. Possibility tracker: per-enemy-piece, history-consistent reachable squares. **Current step:** `docs/step-2-possibility.md`.
-3. Particle tracker: weighted full boards, filtered with the referee's `observation()`.
+2. Possibility tracker: per-enemy-piece, history-consistent reachable squares (`docs/step-2-possibility.md`, done).
+3. Particle tracker: weighted full boards, filtered with the referee's `observation()`. **Current step:** `docs/step-3-particles.md` (draft spec; Part A in progress).
 4. Stockfish integration and throughput benchmarks.
 5. Decision experiments.
 
@@ -170,3 +170,11 @@ We will write a paper from this project, so every significant decision is record
 - **Cite evidence** with the verified/assumed/unverified labels, seeds, pair counts, and CIs, and link the `docs/log.md` section.
 - **Never rewrite an accepted ADR's decision.** Write a new ADR that supersedes it.
 - Add each new ADR to the index in `docs/adr/README.md`, and list new ADRs in the end-of-step report.
+
+## Experiment results
+
+**Save the outputs of every experiment run you'd cite** (batches, matrices, timing runs, ablations) under `docs/results/YYYY-MM-DD-<short-name>/`, following `docs/results/README.md`.
+
+- Include the raw outputs so the tables can be regenerated, plus a `README.md` with the exact command, the machine, the findings with verified/assumed/unverified labels, and links to the ADRs and log sections that use them.
+- Add the folder to the index in `docs/results/README.md`.
+- `docs/log.md` and ADRs cite these folders rather than copying every number.

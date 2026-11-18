@@ -1,0 +1,87 @@
+{
+  "command": "python -m harness.particle_matrix --out docs/results/2026-11-17-step3-tracker-matrix --seeds 2 --workers 1 --timing",
+  "games": [
+    [
+      "tracked_v2",
+      "random",
+      0,
+      true
+    ],
+    [
+      "random",
+      "tracked_v2",
+      0,
+      false
+    ],
+    [
+      "tracked_v2",
+      "random",
+      1,
+      true
+    ],
+    [
+      "random",
+      "tracked_v2",
+      1,
+      false
+    ],
+    [
+      "tracked_v2",
+      "baseline",
+      0,
+      true
+    ],
+    [
+      "baseline",
+      "tracked_v2",
+      0,
+      false
+    ],
+    [
+      "tracked_v2",
+      "baseline",
+      1,
+      true
+    ],
+    [
+      "baseline",
+      "tracked_v2",
+      1,
+      false
+    ],
+    [
+      "tracked_v2",
+      "safety_v2",
+      0,
+      true
+    ],
+    [
+      "safety_v2",
+      "tracked_v2",
+      0,
+      false
+    ],
+    [
+      "tracked_v2",
+      "safety_v2",
+      1,
+      true
+    ],
+    [
+      "safety_v2",
+      "tracked_v2",
+      1,
+      false
+    ]
+  ],
+  "ours": "tracked_v2",
+  "opponents": [
+    "random",
+    "baseline",
+    "safety_v2"
+  ],
+  "seed_offset": 5000,
+  "workers": 1,
+  "elapsed_seconds": 333.2384798526764,
+  "configs": 10
+}
