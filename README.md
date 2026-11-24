@@ -231,6 +231,11 @@ losses.
 
 ## Neural starter
 
+For the experimental observation-history transformer, replay trainer, and
+alpha-beta search over possible hidden boards, see
+[transformer_bot/README.md](transformer_bot/README.md). This research bot runs
+from the repository root and is not yet a standalone submission folder.
+
 `starters/neural` demonstrates a feedforward policy, a recurrent policy and
 one-ply value search. Train on your own computer and submit the source and
 weights. If you do not supply trained weights, the build generates untrained
@@ -256,3 +261,11 @@ For a completed game, open the **Games** tab, choose **Log** in its row, then
 bot's log. The token stays in memory only and is cleared when the dialog closes.
 Server details are redacted; logs flagged as possibly containing secrets are
 withheld for staff review. Missing or expired logs are shown as unavailable.
+
+## Filtered-state mixture-of-experts bot
+
+The new [MoE bot](moe_bot/README.md) combines weighted board hypotheses,
+optional Stockfish evaluations, information/risk/time experts, a trainable state
+probability gate, robust minimax and stochastic move selection. Run it from this
+repository with `python3 -m moe_bot`. See its guide for engine setup, limitations,
+replay-based training commands and evaluation recommendations.

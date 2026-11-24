@@ -1,0 +1,15 @@
+# Local Python environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Downloaded datasets, engines, and experiment outputs
+data/
+engines/
+experiments/
+
+# Generated model checkpoints, except the small verification fixture tracked below
+*.pt
+!verification/
+!verification/*.pt
