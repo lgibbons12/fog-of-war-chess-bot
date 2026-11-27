@@ -1,0 +1,22 @@
+particle_ev100_n32: 1200 games  W/D/L 672/152/376  mean plies 66.6
+King-capture losses:
+  (a)    12  safe move existed, chose exposed
+  (b)   364  all non-losing moves exposed, threat real
+  (c)     0  every move a known loss
+  hidden attacker types in (b): {'Q': 172, 'R': 120, 'B': 37, 'N': 19, 'P': 17, 'K': 1}
+Other losses: {}
+Draws: {'Threefold repetition': 151, '50-move rule': 1}
+Safe-move availability: 0.570 of 39891 decisions
+False alarms: 0.998 of 57129 flagged squares; by possible type P:0.998(n=37014)  N:0.998(n=50711)  B:0.998(n=42635)  R:0.998(n=48394)  Q:0.997(n=38133)  K:0.998(n=43297)
+Tracker precision by ply (mean support per hypothesis, fraction of '?' where Q possible):
+  plies   0- 19: support  8.84  Q-possible 0.490  (n=11288)
+  plies  20- 39: support 12.58  Q-possible 0.271  (n=10652)
+  plies  40- 59: support 18.18  Q-possible 0.234  (n=8536)
+  plies  60- 79: support 30.63  Q-possible 0.482  (n=5597)
+  plies  80- 99: support 39.52  Q-possible 0.566  (n=2713)
+  plies 100-119: support 43.96  Q-possible 0.500  (n=867)
+  plies 120-139: support 46.83  Q-possible 0.473  (n=187)
+  plies 140-159: support 44.37  Q-possible 0.222  (n=45)
+  plies 160-179: support 20.83  Q-possible 0.000  (n=6)
+Tracker update: median 0.062 ms, max 16.271 ms over 79182 updates
+choose_move: median 46.012 ms, max 639.877 ms over 39891 moves

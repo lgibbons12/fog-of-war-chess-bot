@@ -1,0 +1,8 @@
+particle_ev30 - particle_ev100: -0.0058  95% CI [-0.0150, +0.0029]  pairs=600
+particle_ev300 - particle_ev100: -0.0083  95% CI [-0.0213, +0.0046]  pairs=600
+particle_ev1000 - particle_ev100: -0.0250  95% CI [-0.0425, -0.0071]  pairs=600
+particle_v2 - particle_ev100: -0.0242  95% CI [-0.0362, -0.0125]  pairs=600
+particle_ev100_capture - particle_ev100: +0.0217  95% CI [+0.0021, +0.0413]  pairs=600
+particle_ev100_n32 - particle_ev100: +0.0067  95% CI [-0.0167, +0.0304]  pairs=600
+particle_ev100_n128 - particle_ev100: +0.0150  95% CI [-0.0058, +0.0371]  pairs=600
+particle_ev100_n256 - particle_ev100: +0.0300  95% CI [+0.0083, +0.0521]  pairs=600

@@ -1,0 +1,13 @@
+particle_ev100 vs random: 200 pairs per seed, seeds [0, 1, 2]
+  seed 0: 1.000  [0.990, 1.000]  W/D/L 400/0/0
+  seed 1: 0.998  [0.986, 1.000]  W/D/L 399/0/1
+  seed 2: 0.998  [0.986, 1.000]  W/D/L 399/0/1
+W/D/L (A): 1198/0/2  (1200 games)
+Pooled (A): 0.998  95% CI [0.994, 1.000]
+  A as white: 1.000  [0.994, 1.000]  n=600
+  A as black: 0.997  [0.988, 0.999]  n=600
+Reasons:
+   1200  King capturable
+Mean plies: 21.7
+Think (A): mean 268.614 ms/move, max 1298.754 ms
+Throughput: 3.26 games/s (367.8 s, 20 workers)

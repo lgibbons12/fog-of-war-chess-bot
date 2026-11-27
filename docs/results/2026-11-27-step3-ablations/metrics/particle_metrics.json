@@ -1,0 +1,179 @@
+{
+  "games": 1200,
+  "off_reasons": {},
+  "calibration": {
+    "particles": [
+      [
+        35881,
+        118,
+        0.0
+      ],
+      [
+        38,
+        0,
+        0.09653283598704644
+      ],
+      [
+        2662,
+        98,
+        73.33609151661604
+      ],
+      [
+        1822,
+        127,
+        173.07547996445322
+      ],
+      [
+        183,
+        38,
+        63.07892969569757
+      ]
+    ],
+    "unavailable": [
+      [
+        2,
+        0,
+        0.0
+      ],
+      [
+        0,
+        0,
+        0.0
+      ],
+      [
+        0,
+        0,
+        0.0
+      ],
+      [
+        0,
+        0,
+        0.0
+      ],
+      [
+        4,
+        1,
+        4.0
+      ]
+    ]
+  },
+  "buckets": {
+    "0": {
+      "observations": 23756,
+      "truth_present": 12934,
+      "truth_weight": 5293.007588408202,
+      "squares": 725994,
+      "particle_logloss": 297259.5593876926,
+      "possibility_logloss": 700722.6918856482,
+      "unavailable": 3
+    },
+    "20": {
+      "observations": 21253,
+      "truth_present": 5627,
+      "truth_weight": 2138.184839483235,
+      "squares": 751176,
+      "particle_logloss": 445543.89734796964,
+      "possibility_logloss": 507021.6701783644,
+      "unavailable": 6
+    },
+    "40": {
+      "observations": 17012,
+      "truth_present": 3186,
+      "truth_weight": 805.1906721851472,
+      "squares": 739697,
+      "particle_logloss": 332633.9080975945,
+      "possibility_logloss": 313520.68986444833,
+      "unavailable": 3
+    },
+    "60": {
+      "observations": 11345,
+      "truth_present": 2441,
+      "truth_weight": 422.6143309918335,
+      "squares": 568983,
+      "particle_logloss": 196409.2456473605,
+      "possibility_logloss": 197283.38340460826,
+      "unavailable": 4
+    },
+    "80": {
+      "observations": 5476,
+      "truth_present": 1511,
+      "truth_weight": 275.1220684388346,
+      "squares": 287877,
+      "particle_logloss": 93268.73700390964,
+      "possibility_logloss": 91688.70332787004,
+      "unavailable": 0
+    },
+    "100": {
+      "observations": 1835,
+      "truth_present": 558,
+      "truth_weight": 117.09640128917856,
+      "squares": 98501,
+      "particle_logloss": 32500.148487130376,
+      "possibility_logloss": 30458.03666762201,
+      "unavailable": 0
+    },
+    "120": {
+      "observations": 489,
+      "truth_present": 157,
+      "truth_weight": 21.652395615700463,
+      "squares": 26928,
+      "particle_logloss": 9910.70264800065,
+      "possibility_logloss": 8483.044676924255,
+      "unavailable": 0
+    },
+    "140": {
+      "observations": 116,
+      "truth_present": 41,
+      "truth_weight": 7.406437177448116,
+      "squares": 6282,
+      "particle_logloss": 2636.294032378604,
+      "possibility_logloss": 2272.262405829573,
+      "unavailable": 0
+    },
+    "160": {
+      "observations": 34,
+      "truth_present": 0,
+      "truth_weight": 0.0,
+      "squares": 1930,
+      "particle_logloss": 1128.9234560281552,
+      "possibility_logloss": 994.1507270515916,
+      "unavailable": 0
+    },
+    "180": {
+      "observations": 12,
+      "truth_present": 0,
+      "truth_weight": 0.0,
+      "squares": 708,
+      "particle_logloss": 573.6244005383672,
+      "possibility_logloss": 387.7381981042093,
+      "unavailable": 0
+    }
+  },
+  "overall": {
+    "observations": 81328,
+    "truth_coverage": 0.32528772378516624,
+    "truth_weight": 0.11165004344862259,
+    "squares": 3208076,
+    "particle_logloss": 0.4400971300270327,
+    "possibility_logloss": 0.5775525178756584
+  },
+  "health": {
+    "depletions": 3022,
+    "regenerations": 1763,
+    "regeneration_failures": 16,
+    "reexpansions": 1257,
+    "reexpansion_failures": 1779,
+    "resamples": 16334,
+    "unavailable_observations": 16,
+    "depletions_per_game": 2.5183333333333335,
+    "recovery_success": 0.99933818663137,
+    "median_distinct": 36.0,
+    "median_ess": 28.198990496837038
+  },
+  "time": {
+    "moves": 40592,
+    "median_s": 0.11699224991025403,
+    "p95_s": 0.5884878999786451,
+    "max_s": 4.439127099933103
+  }
+}
