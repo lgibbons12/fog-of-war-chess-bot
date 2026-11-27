@@ -14,3 +14,4 @@ Replays and large binaries do not go here (`replays/` is gitignored). Keep each 
 | Folder | Step | What |
 |---|---|---|
 | [2026-11-17-step3-tracker-matrix](2026-11-17-step3-tracker-matrix/README.md) | 3 | Particle-tracker decision matrix: n × opponent model × resampling trigger × recovery × diversity, scored on 60 replayed games |
+| [2026-11-22-step3-timing](2026-11-22-step3-timing/README.md) | 3 | Particle agent per-move time vs n (20 games per n against safety_v2, single worker) |

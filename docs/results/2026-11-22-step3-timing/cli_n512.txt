@@ -1,0 +1,12 @@
+particle_ev300_n512 vs safety_v2: 10 pairs per seed, seeds [0]
+  seed 0: 0.675  [0.457, 0.837]  W/D/L 12/3/5
+W/D/L (A): 12/3/5  (20 games)
+Score (A): 0.675  95% CI [0.457, 0.837]
+  A as white: 0.700  [0.397, 0.892]  n=10
+  A as black: 0.650  [0.354, 0.863]  n=10
+Reasons:
+     17  King capturable
+      3  Threefold repetition
+Mean plies: 68.7
+Think (A): mean 258.357 ms/move, max 2051.513 ms
+Throughput: 0.06 games/s (357.1 s, 1 workers)

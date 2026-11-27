@@ -1,0 +1,83 @@
+[
+  {
+    "dir": "replays\\timing\\n32",
+    "games": 20,
+    "moves": 628,
+    "median_s": 0.058416300103999674,
+    "p95_s": 0.21790839999448508,
+    "p99_s": 0.4698877000482753,
+    "max_s": 0.7710660999873653,
+    "over_1_5s": 0,
+    "median_distinct": 25.0,
+    "median_ess": 22.86790654369836,
+    "depletions_per_game": 3.3,
+    "modes": {
+      "particles": 628
+    }
+  },
+  {
+    "dir": "replays\\timing\\n64",
+    "games": 20,
+    "moves": 691,
+    "median_s": 0.07116430019959807,
+    "p95_s": 0.4014260999392718,
+    "p99_s": 0.6896910001523793,
+    "max_s": 1.462211599922739,
+    "over_1_5s": 0,
+    "median_distinct": 34,
+    "median_ess": 29.13763671829448,
+    "depletions_per_game": 1.9,
+    "modes": {
+      "particles": 690,
+      "unavailable": 1
+    }
+  },
+  {
+    "dir": "replays\\timing\\n128",
+    "games": 20,
+    "moves": 686,
+    "median_s": 0.10082639992469922,
+    "p95_s": 0.7763019000412896,
+    "p99_s": 1.0061760999960825,
+    "max_s": 3.340663800132461,
+    "over_1_5s": 2,
+    "median_distinct": 41.5,
+    "median_ess": 28.97423114813256,
+    "depletions_per_game": 1.9,
+    "modes": {
+      "particles": 686
+    }
+  },
+  {
+    "dir": "replays\\timing\\n256",
+    "games": 20,
+    "moves": 691,
+    "median_s": 0.14502250007353723,
+    "p95_s": 1.1132955000502989,
+    "p99_s": 1.7367781000211835,
+    "max_s": 5.309355199919082,
+    "over_1_5s": 16,
+    "median_distinct": 67,
+    "median_ess": 42.157895244455325,
+    "depletions_per_game": 0.75,
+    "modes": {
+      "particles": 691
+    }
+  },
+  {
+    "dir": "replays\\timing\\n512",
+    "games": 20,
+    "moves": 685,
+    "median_s": 0.1775972000323236,
+    "p95_s": 1.918500200030394,
+    "p99_s": 3.3280251001706347,
+    "max_s": 3.9733052999945357,
+    "over_1_5s": 59,
+    "median_distinct": 84,
+    "median_ess": 49.597110236693446,
+    "depletions_per_game": 0.35,
+    "modes": {
+      "particles": 685
+    }
+  }
+]
