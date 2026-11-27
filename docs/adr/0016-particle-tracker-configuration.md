@@ -1,6 +1,6 @@
 # 0016. Particle tracker configuration: n = 256, uniform model, resample above n, re-expand on depletion
 
-- **Status:** Accepted
+- **Status:** Accepted; the particle count `n = 256` is superseded by [0018](0018-particle-count-64.md)
 - **Date:** 2026-11-18
 - **Step:** 3 (Part A)
 - **Decided by:** Claude Code (recommendation from the decision matrix), accepted by Liam 2026-11-22

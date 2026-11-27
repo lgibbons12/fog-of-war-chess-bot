@@ -50,3 +50,4 @@ File name: `NNNN-short-kebab-title.md`, numbered in order and never reused. Copy
 | [0015](0015-resample-only-above-n.md) | Resample only when distinct boards exceed `n` | Accepted | 3 | Claude Code, accepted by Liam |
 | [0016](0016-particle-tracker-configuration.md) | Particle tracker configuration: n = 256, uniform, resample above n, re-expand on depletion | Accepted | 3 | Claude Code, accepted by Liam |
 | [0017](0017-particle-agent-fallbacks.md) | Particle agent fallbacks: the time guard and errors switch particles off for the game; depletion substitutes exposure | Proposed | 3 | Claude Code |
+| [0018](0018-particle-count-64.md) | Particle agents use n = 64, the largest count that meets the per-move budget (supersedes 0016's n) | Accepted | 3 | Liam |
