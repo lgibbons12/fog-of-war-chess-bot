@@ -1,9 +1,9 @@
 # 0015. Resample only when distinct boards exceed `n`
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-17
 - **Step:** 3 (Part A)
-- **Decided by:** Claude Code (deviation from the draft spec)
+- **Decided by:** Claude Code (deviation from the draft spec), accepted by Liam 2026-11-22
 - **Source:** `docs/step-3-particles.md` § Resampling; `bot/particles.py` `_resample`; `docs/log.md` § Step 3 Part A
 
 ## Context

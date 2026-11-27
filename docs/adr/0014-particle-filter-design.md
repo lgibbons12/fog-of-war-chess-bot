@@ -1,16 +1,16 @@
 # 0014. Step 3 particle filter: enumerated children, referee-only consistency, risk as expected value
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-17
 - **Step:** 3
-- **Decided by:** Claude Code (draft spec), pending team review
+- **Decided by:** Claude Code (draft spec), accepted by Liam 2026-11-22
 - **Source:** `docs/step-3-particles.md`
 
 ## Context
 
 Step 2 showed that worst-case exposure is sound but uninformative: about 99% of flagged squares hold no attacker, and the gate failed (0013). Ranking moves needs the *probability* of king capture, which requires joint board hypotheses (0008, 0010).
 
-## Decision (proposed)
+## Decision
 
 1. **Particles are full `FowBoard`s** with weights, starting from the known start position.
 2. **Consistency is decided only by the referee.** A particle survives iff `observation(board, side) == obs` and `outcome(board, Counter()) is None`. The second condition turns "the game is still going" into evidence: both kings were safe at every observation.

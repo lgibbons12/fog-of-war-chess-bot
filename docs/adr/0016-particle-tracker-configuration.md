@@ -1,16 +1,16 @@
 # 0016. Particle tracker configuration: n = 256, uniform model, resample above n, re-expand on depletion
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-18
 - **Step:** 3 (Part A)
-- **Decided by:** Claude Code (recommendation from the decision matrix), pending team review
+- **Decided by:** Claude Code (recommendation from the decision matrix), accepted by Liam 2026-11-22
 - **Source:** `docs/results/2026-11-17-step3-tracker-matrix/README.md`; `docs/log.md` § Step 3 Part A
 
 ## Context
 
 The Step 3 draft spec left the particle count to a timing run (decided 2026-11-17) and left the opponent model open. Part A also surfaced frequent loss of the true board. That raised three more choices: the resampling trigger (ADR 0015), the recovery strategy, and diversity resampling. Liam asked for every combination to be run and compared.
 
-## Decision (proposed)
+## Decision
 
 `ParticleTracker(n=256, model=UniformModel(), trigger="above_n", recovery="reexpand", diversity=False)`.
 

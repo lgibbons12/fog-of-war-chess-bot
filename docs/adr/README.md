@@ -46,6 +46,6 @@ File name: `NNNN-short-kebab-title.md`, numbered in order and never reused. Copy
 | [0011](0011-rays-through-hidden-squares.md) | Rays continue only through harmless hidden squares | Accepted | 2 | Claude Code |
 | [0012](0012-known-attackers-need-clear-lines.md) | A visible attacker is "known" only along a fully visible line | Accepted | 2 | Claude Code |
 | [0013](0013-keep-safety-v2-over-tracked-v2.md) | Keep `safety_v2` as the arena agent; don't ship `tracked_v2` | Accepted | 2 | Spec gate |
-| [0014](0014-particle-filter-design.md) | Step 3 particle filter: enumerated children, referee-only consistency, risk as expected value | Proposed | 3 | Claude Code |
-| [0015](0015-resample-only-above-n.md) | Resample only when distinct boards exceed `n` | Proposed | 3 | Claude Code |
-| [0016](0016-particle-tracker-configuration.md) | Particle tracker configuration: n = 256, uniform, resample above n, re-expand on depletion | Proposed | 3 | Claude Code |
+| [0014](0014-particle-filter-design.md) | Step 3 particle filter: enumerated children, referee-only consistency, risk as expected value | Accepted | 3 | Claude Code, accepted by Liam |
+| [0015](0015-resample-only-above-n.md) | Resample only when distinct boards exceed `n` | Accepted | 3 | Claude Code, accepted by Liam |
+| [0016](0016-particle-tracker-configuration.md) | Particle tracker configuration: n = 256, uniform, resample above n, re-expand on depletion | Accepted | 3 | Claude Code, accepted by Liam |

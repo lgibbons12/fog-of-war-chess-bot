@@ -1,6 +1,6 @@
 # Step 3 Spec: Particle Tracker and Risk-Ranked Moves
 
-> **Status: DRAFT, awaiting team review.** Drafted by Claude Code on 2026-11-17. Open questions are collected at the end; resolve them before implementation starts. Design rationale is in ADR 0014 (Proposed).
+> **Status: Approved** by Liam on 2026-11-22 (drafted by Claude Code on 2026-11-17). Design rationale is in ADR 0014; Part A configuration in ADRs 0015 and 0016 (all Accepted).
 
 **Goal.**
 - Keep a weighted set of **full boards** (particles) that are consistent with every observation so far.
@@ -285,7 +285,7 @@ If the gate passes, package the best particle agent, run `scripts/check_package.
 2. **The transformer:** a parallel track, outside Step 3. Its results will be compared separately. Integration (e.g. as an `OpponentModel`, subject to the stdlib-plus-`chess` constraint) gets its own ADR later.
 3. **Depletion:** rebuild from the possibility tracker, as specified.
 
-## Open questions for the team
+## Resolved questions (Liam, 2026-11-22)
 
-1. **λ grid.** Are {100, 300, 1000} the right range? See the reasoning in Part B.
-2. **Opponent model.** Is `uniform` plus one `capture` variant enough, or should `capture` imitate the baseline more closely?
+1. **λ grid:** {100, 300, 1000} as proposed, extended one step if the best λ lands on an edge.
+2. **Opponent model:** `uniform` (ADR 0016) plus the existing `capture` variant as the one ablation.
