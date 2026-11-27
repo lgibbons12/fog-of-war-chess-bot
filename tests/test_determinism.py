@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 from dataclasses import asdict
+import json
+from pathlib import Path
+import tempfile
 import unittest
 
 from harness.match import run_match_pairs
@@ -28,6 +31,21 @@ class DeterminismTests(unittest.TestCase):
                 self.assertEqual(len(serial), 8)
                 self.assertEqual(without_timing(serial), without_timing(parallel))
                 self.assertEqual(without_timing(serial), without_timing(again))
+
+    def test_particle_agent_is_deterministic_and_never_hits_the_time_guard(self):
+        with tempfile.TemporaryDirectory() as replays:
+            serial = run_match_pairs("particle_ev300", "safety_v2", 3, 11, workers=1)
+            parallel = run_match_pairs("particle_ev300", "safety_v2", 3, 11, workers=4, replay_dir=replays)
+            self.assertEqual(without_timing(serial), without_timing(parallel))
+            modes = set()
+            for path in Path(replays).glob("*.json"):
+                replay = json.loads(path.read_text())
+                for frame in replay["frames"][1:]:
+                    if frame["decision"] and "particle_mode" in frame["decision"]:
+                        modes.add(frame["decision"]["particle_mode"])
+            self.assertTrue(modes)
+            self.assertNotIn("time_guard", modes)
+            self.assertNotIn("error", modes)
 
 
 if __name__ == "__main__":

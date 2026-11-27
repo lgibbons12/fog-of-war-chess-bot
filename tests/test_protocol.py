@@ -29,7 +29,7 @@ class ProtocolTranscriptTests(unittest.TestCase):
         board = FowBoard()
         # White receives exactly one observation before its first move.
         transcript = "fow\nw 180 2\n" + observation(board, chess.WHITE) + "\n180\n"
-        for agent in ("random", "baseline", "safety", "tracked_v2"):
+        for agent in ("random", "baseline", "safety", "tracked_v2", "particle_ev300"):
             with self.subTest(agent=agent):
                 out = subprocess.run(protocol_argv(agent, 7), input=transcript, text=True,
                                      capture_output=True, check=True, timeout=30).stdout
@@ -65,7 +65,8 @@ class FallbackGuardTests(unittest.TestCase):
 class ProtocolRefereeTests(unittest.TestCase):
     def test_referee_games_complete_without_failed_side(self):
         for white, black in [("random", "baseline"), ("baseline", "random"), ("random", "random"),
-                             ("safety", "baseline"), ("baseline", "safety")]:
+                             ("safety", "baseline"), ("baseline", "safety"),
+                             ("particle_ev300", "baseline")]:
             with self.subTest(white=white, black=black):
                 replay = run_match(protocol_argv(white, 3), protocol_argv(black, 4), max_plies=1000)
                 self.assertNotIn("failedSide", replay, replay["reason"])
