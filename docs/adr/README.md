@@ -49,3 +49,4 @@ File name: `NNNN-short-kebab-title.md`, numbered in order and never reused. Copy
 | [0014](0014-particle-filter-design.md) | Step 3 particle filter: enumerated children, referee-only consistency, risk as expected value | Accepted | 3 | Claude Code, accepted by Liam |
 | [0015](0015-resample-only-above-n.md) | Resample only when distinct boards exceed `n` | Accepted | 3 | Claude Code, accepted by Liam |
 | [0016](0016-particle-tracker-configuration.md) | Particle tracker configuration: n = 256, uniform, resample above n, re-expand on depletion | Accepted | 3 | Claude Code, accepted by Liam |
+| [0017](0017-particle-agent-fallbacks.md) | Particle agent fallbacks: the time guard and errors switch particles off for the game; depletion substitutes exposure | Proposed | 3 | Claude Code |
