@@ -29,10 +29,16 @@ REGISTRY: dict[str, Callable[..., Agent]] = {
     "tracked_binary": partial(SafetyAgent, key=BINARY_FIRST, tracked=True),
     # Step 3: particle-estimated loss probability (n = 64, uniform, re-expand; ADRs 0016, 0018).
     "particle_v2": partial(ParticleAgent, lam=None),
+    "particle_ev30": partial(ParticleAgent, lam=30),   # grid extension: best of {100,300,1000} was 100
     "particle_ev100": partial(ParticleAgent, lam=100),
     "particle_ev300": partial(ParticleAgent, lam=300),
     "particle_ev1000": partial(ParticleAgent, lam=1000),
-    # Particle-count variants: the timing run and the "does more compute help?" experiment.
-    # n32 is also the fast variant for the consistency tests (spec Test 1).
-    **{f"particle_ev300_n{n}": partial(ParticleAgent, lam=300, n=n) for n in (32, 128, 256, 512)},
+    # Ablations of each EV agent: particle count ("does more compute help?") and the capture
+    # opponent model. particle_ev300_n32 is also the consistency tests' fast agent (spec Test 1);
+    # particle_ev300_n512 was used only by the timing run.
+    **{f"particle_ev{lam}_n{n}": partial(ParticleAgent, lam=lam, n=n)
+       for lam in (30, 100, 300, 1000) for n in (32, 128, 256)},
+    **{f"particle_ev{lam}_capture": partial(ParticleAgent, lam=lam, model="capture")
+       for lam in (30, 100, 300, 1000)},
+    "particle_ev300_n512": partial(ParticleAgent, lam=300, n=512),
 }
