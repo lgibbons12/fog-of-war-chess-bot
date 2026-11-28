@@ -294,7 +294,7 @@ Hypothesis supports also grow steadily with the ply count (8.9 → 41 squares), 
 
 ## Step 3: Particle tracker, Part A (2026-11-17)
 
-Spec: `docs/step-3-particles.md` (still a **draft**; Part A was started at Liam's request before the remaining open questions were settled). Status: Part A implemented, and all tests pass. Parts B and C are not started. Not yet committed.
+Spec: `docs/step-3-particles.md` (still a **draft**; Part A was started at Liam's request before the remaining open questions were settled). Status: Part A implemented, and all tests pass. Committed as `7e91cb2`, `2bb9fe0` and `717a2f2`; Part B follows below.
 
 ### What we did
 
@@ -382,7 +382,72 @@ At Liam's request, every open Part A choice was run as a full matrix. Results, c
 - **Headline results** (verified; 60 replayed games, 27,509 scored moves):
   - **Particles beat the possibility tracker as a risk predictor:** Brier ×100 0.60–0.72 vs 1.84.
   - **More particles keep the truth more often:** n = 256 vs 128 adds +0.108 truth coverage [+0.051, +0.168].
-  - **The timing run picks n = 256.** Its single-worker max is 0.97–1.30 s per move; n = 512 breaks the 1.5 s max.
+  - **The timing run picks n = 256.** Its single-worker max is 0.97–1.30 s per move; n = 512 breaks the 1.5 s max. (Superseded in Part B: the real agent's timing forces n = 64, ADR 0018.)
   - **Re-expansion helps truth coverage:** +0.043 [+0.014, +0.082].
   - **No significant effect:** the `capture` model, the `ess` trigger and diversity resampling.
 - **Tests:** Linux 59 passed, 557 subtests.
+
+## Step 3: Particle agents, Part B and experiments (2026-11-22 to 27)
+
+Spec: `docs/step-3-particles.md`, approved by Liam on 2026-11-22, along with ADRs 0014–0016. Status: done. The gate passes, and `particle_ev100` is the proposed arena agent (ADR 0019).
+
+### What we did
+
+- **Agents:** `bot/agents/particle_agent.py` is `ParticleAgent`, a `SafetyAgent` with a particle-estimated `p_loss`. It is registered as:
+  - `particle_v2`, with `p_loss` as a tie-break after material;
+  - `particle_ev{30,100,300,1000}`, with key `-(material - λ·p_loss)`;
+  - for every λ, the ablation variants `_n{32,128,256}` and `_capture`.
+
+  Each decision records `particle_mode`:
+  - `particles`: normal operation;
+  - `unavailable`: depleted, so `p_loss` = exposure > 0;
+  - `time_guard`: under 20 s on the clock, so rank as `safety_v2` and drop the particles;
+  - `error`: non-strict fallback, the same as `time_guard`.
+
+  See ADR 0017.
+- **Harness tools:**
+  - `harness/particle_metrics.py` rebuilds a deterministic agent from its replay, asserting identical moves, and scores its particles against the truth. Tests use the same rebuild.
+  - `harness/particle_timing.py` summarizes per-move times.
+  - `harness/paired_compare.py` is a paired bootstrap by (seed, pair).
+  - `harness/step3_queue.py` runs the experiment queue and writes a self-refreshing progress page.
+- **Tests:**
+  - `tests/test_particle_agent.py`: keys, one RNG call per move, and every fallback mode.
+  - Spec tests 1–4 now check a rebuilt `particle_ev300_n32` agent's own tracker: 48 games by default, 200 with `FOW_PARTICLE_GAMES=200`.
+  - The determinism test now covers `particle_ev300` and asserts that no `time_guard` or `error` decisions occur.
+  - The protocol transcript and referee tests include a particle agent.
+
+### Results (verified)
+
+- **Full spec Test 1** (204 games, Windows):
+  - 166,510 particle-observations and 100,879 `p_loss` cross-checks, with zero violations;
+  - 548 depletions and 9 failed regenerations; 5 decisions ran in `unavailable` mode.
+- **Timing** (`docs/results/2026-11-22-step3-timing/`): the real agent is much slower in the worst case than the Part A replays suggested. Max per move is 5.3 s at n = 256 and 1.46 s at n = 64. Liam chose n = 64 (ADR 0018).
+- **Gate** (`docs/results/2026-11-22-step3-gate/`): every particle agent beats `safety_v2`. `particle_ev100` scored **0.617 [0.589, 0.644]**. λ = 30 and 300 tie with it, while λ = 1000 and `particle_v2` are significantly worse.
+- **Ablations and metrics** (`docs/results/2026-11-27-step3-ablations/`):
+  - n = 256 is +0.030 [+0.008, +0.052], but over budget.
+  - The `capture` model's +0.022 against `safety_v2` failed its head-to-head confirmation: 0.484 [0.456, 0.512].
+  - vs baseline 0.762, vs random 0.998.
+  - Calibration is within about 1.5× in the middle buckets, and `p_loss = 0` still lost 0.33% of the time.
+  - Truth coverage was 0.325, and per-square log loss was 0.440 for particles vs 0.578 for the possibility baseline.
+
+### Issues found and resolutions
+
+1. **The timing budget broke at n = 256** (ADR 0016's choice). The particle agent's own games trigger expensive depletion recoveries and full-set expansions. *Resolution:* n = 64, by the spec's rule (ADR 0018). Speeding up the tracker is the clearest follow-up.
+2. **The spec words the time guard two ways.** *Resolution:* below 20 s, rank as `safety_v2` and drop the particles for the rest of the game (ADR 0017, Proposed).
+3. **The laptop slept for about 12 hours during the `particle_ev1000` run.** Wall-clock think time drained the simulated clocks, and the time guard fired in 29 games. *Resolution:* reran the experiment; the first run is kept as `*_slept`. The queue now checks every run for `time_guard` decisions. Harness clocks still use wall time, so long runs must keep the machine awake.
+4. **Deviations from the spec:**
+   - Test 1 runs 48 games by default instead of 200 (the 200-game run was done once; see above).
+   - The n ablation used {32, 128, 256} instead of {32, 128, 512}, because the default is now 64 and 512 is far over budget.
+   - The "surviving candidates per particle" timing statistic was not recorded.
+
+### Final checks (verified, 2026-11-27)
+
+- **Full suite on Linux (WSL Ubuntu):** 69 passed, 601 subtests (`pytest tests test_uniform_random.py`). On Windows: 54 passed, 2 skipped (the referee tests).
+- **Package:** `scripts/package.sh particle_ev100` builds `dist/bot.zip` (15 files). `scripts/check_package.sh` passed in WSL with no protocol failures. Its two games:
+  - **As Black: a win.**
+  - **As White: a loss in 7 plies.** That was surprising, since 0 of 1,200 harness games against baseline ended in a loss within 10 plies. It did not recur:
+    - 6 seeded games through `bot/protocol.py` were all won;
+    - 20 more games through the unzipped `run.sh` (unseeded, as in the arena) went 14 W / 2 D / 4 L, and no loss came before ply 83.
+
+    The check deletes its replays, so the 7-ply game can't be inspected. Treated as a rare genuine early attack (**unverified**).
+- **Arena-style timing:** in those 20 referee games, the referee-charged time per move was median 0.026 s and max 0.283 s, with 0 moves over 1.5 s across 614 moves. The referee buffers observations and starts the clock before sending them (`referee.py` `_move`), so this covers both particle updates plus the decision. Bot stderr showed depletions but no `particles off` lines and no tracebacks.
