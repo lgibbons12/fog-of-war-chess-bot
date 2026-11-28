@@ -14,7 +14,7 @@ Context for coding agents working in this repo. Read this file in full before ch
 0. Agent interface and in-process harness (`docs/step-0-spec.md`, done).
 1. Safety agent: greedy captures plus possibility-based king safety (`docs/step-1-safety.md`, done).
 2. Possibility tracker: per-enemy-piece, history-consistent reachable squares (`docs/step-2-possibility.md`, done).
-3. Particle tracker: weighted full boards, filtered with the referee's `observation()`. **Current step:** `docs/step-3-particles.md` (draft spec; Part A in progress).
+3. Particle tracker: weighted full boards, filtered with the referee's `observation()` (`docs/step-3-particles.md`, done; gate passed, see ADR 0019).
 4. Stockfish integration and throughput benchmarks.
 5. Decision experiments.
 
@@ -80,7 +80,7 @@ referee.py    # copied from the repo root
 bot/          # the bot/ package as-is (bot/run.sh is for running from inside the repo)
 ```
 
-**Arena agent: `safety_v2`** (registry name). Build the zip with `scripts/package.sh [agent]` (default `safety_v2`). Before uploading, run `scripts/check_package.sh`, which needs Linux/macOS or WSL. It unzips the build and plays one referee game in each color against `baseline.py`.
+**Arena agent: `particle_ev100`** (registry name; ADR 0019, previously `safety_v2`). Build the zip with `scripts/package.sh [agent]` (default `particle_ev100`). Before uploading, run `scripts/check_package.sh`, which needs Linux/macOS or WSL. It unzips the build and plays one referee game in each color against `baseline.py`.
 
 ## Commands
 

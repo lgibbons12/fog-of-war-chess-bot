@@ -1,6 +1,6 @@
 #!/bin/bash
 # Build dist/bot.zip for the arena: bot/ (as a package), referee.py, and a
-# root run.sh that starts the arena agent (default safety_v2; override with
+# root run.sh that starts the arena agent (default particle_ev100; override with
 # `scripts/package.sh <registry name>`). harness/, tests/, replays and
 # virtualenvs are never included. Needs only a Python 3 (stdlib zipfile).
 set -euo pipefail
@@ -12,7 +12,7 @@ elif [ -x .venv/Scripts/python.exe ]; then PYTHON=.venv/Scripts/python.exe
 else PYTHON=python3
 fi
 
-AGENT="${1:-safety_v2}"
+AGENT="${1:-particle_ev100}"
 mkdir -p dist
 rm -f dist/bot.zip
 "$PYTHON" - "$AGENT" <<'EOF'
